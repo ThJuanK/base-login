@@ -3,6 +3,7 @@ from fastapi import FastAPI
 import jwt
 import os
 
+from database import select
 from models import register_body
 
 load_dotenv()
@@ -21,3 +22,29 @@ def register(body: register_body):
     }
     token = jwt.encode(payload, jwt_key)
     return {'token': token}
+
+
+@app.post('/login/')
+def register(body: register_body):
+
+    try:
+        payload = {
+            'usr_name': body.usr_name,
+            'password': body.password
+        }
+        print(payload)
+        username = payload['usr_name']
+        password = payload['password']
+        print(username)
+
+        resultados = select(f"SELECT * FROM users where user = '{username}' AND pass = '{password}' ")
+        
+        print(resultados)
+       
+        
+        return {'result': resultados[0]}
+
+    except Exception as error:
+        print(f"Error: {error}")
+        return {"error": error}
+   
