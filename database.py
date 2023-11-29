@@ -12,14 +12,20 @@ DB_PORT = os.getenv('DB_PORT')
 DB_DATABASE = os.getenv('DB_DATABASE')
 
 def select(query):
-    with mysql.connector.connect(
-        host= DB_HOST,
-        user= DB_USER,
-        password= DB_PASSWORD,
-        database= DB_DATABASE,
-        port= DB_PORT
-    ) as connector:
-        with connector.cursor() as cursor:
-            cursor.execute(query)
-            data = cursor.fetchall()
-            return data
+    print("Intentando conectar a la base de datos...")
+    try:
+        with mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_DATABASE,
+            port=DB_PORT
+        ) as connector:
+            with connector.cursor() as cursor:
+                cursor.execute(query)
+                num_filas_afectadas = cursor.rowcount
+                connector.commit()
+                print(f"Operación de inserción exitosa. Filas afectadas: {num_filas_afectadas}")
+                return num_filas_afectadas
+    except mysql.connector.Error as err:
+        print(f"Error de MySQL durante la inserción: {err}")
