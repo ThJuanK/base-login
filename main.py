@@ -4,6 +4,7 @@ import jwt
 import os
 
 from database import select
+from database import login
 from models import register_body
 from models import crear_body
 from models import ingresar_body
@@ -36,17 +37,18 @@ def ingresar(body: ingresar_body):
             'usr_name': body.usr_name,
             'password': body.password
         }
-        print(payload)
         username = payload['usr_name']
         password = payload['password']
-        print(username)
+        resultados = login(f"SELECT * FROM users where user = '{username}' ")
+        if not resultados:
+            return {"msg": 'Error Usuario no encontrado'}
 
-        resultados = select(f"SELECT * FROM users where user = '{username}' AND pass = '{password}' ")
+        stored_password = resultados[0][2]
+        if(password.strip() != stored_password.strip() ):
+            return {"mgs": 'Contraseña incorrecta'}
         
-        print(resultados)
-       
-        
-        return {'result': resultados[0]}
+    
+        return {"status": 'true' , 'msg': 'Ingreso Exitoso'}
 
     except Exception as error:
         print(f"Error: {error}")

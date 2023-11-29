@@ -23,9 +23,26 @@ def select(query):
         ) as connector:
             with connector.cursor() as cursor:
                 cursor.execute(query)
+                print(cursor)
                 num_filas_afectadas = cursor.rowcount
                 connector.commit()
                 print(f"Operación de inserción exitosa. Filas afectadas: {num_filas_afectadas}")
                 return num_filas_afectadas
+    except mysql.connector.Error as err:
+        print(f"Error de MySQL durante la inserción: {err}")
+
+def login(query, params=None) :
+    print("Obteniendo Datos...")
+    try:
+        with mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_DATABASE,
+            port=DB_PORT
+        ) as connector:
+            with connector.cursor() as cursor:
+                cursor.execute(query, params)
+                return cursor.fetchall()
     except mysql.connector.Error as err:
         print(f"Error de MySQL durante la inserción: {err}")
