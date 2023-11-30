@@ -41,8 +41,9 @@ def login(query, params=None) :
             database=DB_DATABASE,
             port=DB_PORT
         ) as connector:
-            with connector.cursor() as cursor:
+            with connector.cursor(dictionary=True) as cursor:
                 cursor.execute(query, params)
-                return cursor.fetchall()
+                results = cursor.fetchall()
+                return results
     except mysql.connector.Error as err:
         print(f"Error de MySQL durante la inserción: {err}")

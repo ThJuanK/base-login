@@ -7,6 +7,9 @@ class register_body(BaseModel):
 class crear_body(BaseModel):
     usr_name: str
     password: str
+    cedula: str
+    nombre: str
+    correo: str
 
 class ingresar_body(BaseModel):
     usr_name: str
@@ -14,7 +17,6 @@ class ingresar_body(BaseModel):
 
 class borrar_body(BaseModel):
     usr_name: str
-    password: str
 
 class actualizar_body(BaseModel):
     usr_name: str
